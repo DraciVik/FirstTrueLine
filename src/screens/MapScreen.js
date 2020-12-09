@@ -20,7 +20,6 @@ const MapScreen = () => {
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
   }
-  console.log('Map screen loaded');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -47,7 +46,8 @@ const MapScreen = () => {
           longitude: 21.7453,
           latitudeDelta: 2.7,
           longitudeDelta: 2.65,
-        }}></MapView>
+        }}
+      />
       <TouchableComponent
         // onPress={() => {
         //   getCurrentLocationHandler();
@@ -58,7 +58,85 @@ const MapScreen = () => {
             : TouchableNativeFeedback.SelectableBackground()
         }
         useForeground>
-        <View style={{position: 'absolute', bottom: 20, right: 20}}>
+        <View style={styles.fire}>
+          {isFetching ? (
+            <View style={styles.locationIndicator}>
+              <ActivityIndicator size="large" color={'black'} />
+            </View>
+          ) : (
+            <View style={styles.fireContainer}>
+              <MaterialCommunityIcons
+                name={'fire'}
+                color="black"
+                size={windowWidth / 13}
+              />
+            </View>
+          )}
+        </View>
+      </TouchableComponent>
+      <TouchableComponent
+        // onPress={() => {
+        //   getCurrentLocationHandler();
+        // }}
+        background={
+          Platform.Version >= 21
+            ? TouchableNativeFeedback.Ripple('black', true)
+            : TouchableNativeFeedback.SelectableBackground()
+        }
+        useForeground>
+        <View style={styles.flood}>
+          {isFetching ? (
+            <View style={styles.locationIndicator}>
+              <ActivityIndicator size="large" color={'black'} />
+            </View>
+          ) : (
+            <View style={styles.floodContainer}>
+              <MaterialCommunityIcons
+                name={'home-flood'}
+                color="black"
+                size={windowWidth / 13}
+              />
+            </View>
+          )}
+        </View>
+      </TouchableComponent>
+      <TouchableComponent
+        // onPress={() => {
+        //   getCurrentLocationHandler();
+        // }}
+        background={
+          Platform.Version >= 21
+            ? TouchableNativeFeedback.Ripple('black', true)
+            : TouchableNativeFeedback.SelectableBackground()
+        }
+        useForeground>
+        <View style={styles.earthQuake}>
+          {isFetching ? (
+            <View style={styles.locationIndicator}>
+              <ActivityIndicator size="large" color={'black'} />
+            </View>
+          ) : (
+            <View style={styles.earthquakeContainer}>
+              <MaterialCommunityIcons
+                name={'leak'}
+                color="black"
+                size={windowWidth / 13}
+              />
+            </View>
+          )}
+        </View>
+      </TouchableComponent>
+      <TouchableComponent
+        // onPress={() => {
+        //   getCurrentLocationHandler();
+        // }}
+        background={
+          Platform.Version >= 21
+            ? TouchableNativeFeedback.Ripple('black', true)
+            : TouchableNativeFeedback.SelectableBackground()
+        }
+        useForeground>
+        <View style={styles.navigation}>
           {isFetching ? (
             <View style={styles.locationIndicator}>
               <ActivityIndicator size="large" color={'black'} />
@@ -68,7 +146,7 @@ const MapScreen = () => {
               <MaterialCommunityIcons
                 name={'navigation'}
                 color="black"
-                size={windowWidth / 8}
+                size={windowWidth / 9}
               />
             </View>
           )}
@@ -108,11 +186,64 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: windowWidth / 3,
-    width: windowWidth / 6,
-    height: windowWidth / 6,
+    width: windowWidth / 7.5,
+    height: windowWidth / 7.5,
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 5,
+  },
+  floodContainer: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: windowWidth / 3,
+    width: windowWidth / 10,
+    height: windowWidth / 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  fireContainer: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: windowWidth / 3,
+    width: windowWidth / 10,
+    height: windowWidth / 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  earthquakeContainer: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: windowWidth / 3,
+    width: windowWidth / 10,
+    height: windowWidth / 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 5,
+  },
+  navigation: {
+    position: 'absolute',
+    bottom: windowWidth / 15,
+    right: windowWidth / 20,
+  },
+  fire: {
+    position: 'absolute',
+    bottom: windowWidth / 2,
+    right: 5,
+  },
+  flood: {
+    position: 'absolute',
+    bottom: windowWidth / 1.5,
+    right: 5,
+  },
+  earthQuake: {
+    position: 'absolute',
+    bottom: windowWidth / 1.2,
+    right: 5,
   },
 });
 
