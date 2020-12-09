@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,9 +9,11 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
+import ENV from '../../env';
 import MapView, {Marker} from 'react-native-maps';
+import {Permissions} from 'react-native-unimodules';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import * as Location from 'expo-location';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -20,9 +22,100 @@ const MapScreen = () => {
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
   }
+  const [fireEventData, setFireEventData] = useState([]);
+  const [showFires, setShowFires] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingFires, setIsFetchingFires] = useState(false);
   const [error, setError] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [isFetchingEarthquakes, setIsFetchingEarthquakes] = useState(false);
+  const [isFetchingFloods, setIsFetchingFloods] = useState(false);
+  const [pickedLocation, setPickedLocation] = useState();
+  const [mapRegion, setMapRegion] = useState({
+    latitude: 41.6086,
+    longitude: 21.7453,
+    latitudeDelta: 2.7,
+    longitudeDelta: 2.65,
+  });
+
+  const fetchFires = async () => {
+    if (showFires === true) {
+      setShowFires(false);
+      return;
+    }
+    setIsFetchingFires(true);
+
+    const res = await fetch(
+      `https://eonet.sci.gsfc.nasa.gov/api/v2.1/events?api_key=${ENV.nasaAPIKey}`,
+    );
+    const {events} = await res.json();
+    setFireEventData(events);
+    console.log(events);
+    setIsFetchingFires(false);
+    setShowFires(true);
+  };
+
+  const verifyPermissions = async () => {
+    const result = await Permissions.askAsync(Permissions.LOCATION);
+    if (result.status !== 'granted') {
+      Alert.alert(
+        'Insufficient permissions!',
+        'You need to grant location permissions to use this feature',
+        [{text: 'Okay'}],
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const getCurrentLocationHandler = async () => {
+    const hasPermission = await verifyPermissions();
+    console.clear();
+    console.log(hasPermission);
+    if (!hasPermission) {
+      return;
+    }
+    try {
+      setIsFetching(true);
+      const location = await Location.getCurrentPositionAsync({
+        timeout: 10000,
+      });
+
+      setPickedLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+      selectLocationHandler({
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      });
+      // loadVetDetails({
+      //   lat: location.coords.latitude,
+      //   lng: location.coords.longitude,
+      // });
+    } catch (err) {
+      console.log(err);
+      Alert.alert(
+        'Could not fetch location',
+        'Please try again later or pick a location on the map',
+        [{text: 'Okay'}],
+      );
+    }
+    setIsFetching(false);
+  };
+
+  // const loadNasaData = async () => {
+  //   https://api.nasa.gov/planetary/apod?api_key=V4tyZdilz6SqNIymRf1Q6rOkGmvwNizwk80Yshqu
+  // }
+
+  const selectLocationHandler = (event) => {
+    setMapRegion({
+      latitude: event.lat,
+      longitude: event.lng,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -38,36 +131,51 @@ const MapScreen = () => {
 
   return (
     <>
-      <MapView
-        minZoomLevel={0}
-        style={styles.map}
-        region={{
-          latitude: 41.6086,
-          longitude: 21.7453,
-          latitudeDelta: 2.7,
-          longitudeDelta: 2.65,
-        }}
-      />
+      <MapView minZoomLevel={0} style={styles.map} initialRegionrr={mapRegion}>
+        {showFires &&
+          !isFetchingFires &&
+          fireEventData &&
+          fireEventData.map((value, index) => {
+            console.table(value.categories);
+            if (value.categories[0].id === 8) {
+              console.log('VALUE', value);
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: value.geometries[0].coordinates[1],
+                    longitude: value.geometries[0].coordinates[0],
+                  }}>
+                  <MaterialCommunityIcons
+                    name={'fire'}
+                    color="red"
+                    size={windowWidth / 13}
+                  />
+                </Marker>
+              );
+            }
+            return null;
+          })}
+      </MapView>
+
       <TouchableComponent
-        // onPress={() => {
-        //   getCurrentLocationHandler();
-        // }}
         background={
           Platform.Version >= 21
             ? TouchableNativeFeedback.Ripple('black', true)
             : TouchableNativeFeedback.SelectableBackground()
         }
+        onPress={() => fetchFires()}
         useForeground>
         <View style={styles.fire}>
-          {isFetching ? (
-            <View style={styles.locationIndicator}>
+          {isFetchingFires ? (
+            <View>
               <ActivityIndicator size="large" color={'black'} />
             </View>
           ) : (
             <View style={styles.fireContainer}>
               <MaterialCommunityIcons
                 name={'fire'}
-                color="black"
+                color={showFires ? 'red' : 'black'}
                 size={windowWidth / 13}
               />
             </View>
@@ -75,9 +183,6 @@ const MapScreen = () => {
         </View>
       </TouchableComponent>
       <TouchableComponent
-        // onPress={() => {
-        //   getCurrentLocationHandler();
-        // }}
         background={
           Platform.Version >= 21
             ? TouchableNativeFeedback.Ripple('black', true)
@@ -85,7 +190,7 @@ const MapScreen = () => {
         }
         useForeground>
         <View style={styles.flood}>
-          {isFetching ? (
+          {isFetchingFloods ? (
             <View style={styles.locationIndicator}>
               <ActivityIndicator size="large" color={'black'} />
             </View>
@@ -101,9 +206,6 @@ const MapScreen = () => {
         </View>
       </TouchableComponent>
       <TouchableComponent
-        // onPress={() => {
-        //   getCurrentLocationHandler();
-        // }}
         background={
           Platform.Version >= 21
             ? TouchableNativeFeedback.Ripple('black', true)
@@ -111,7 +213,7 @@ const MapScreen = () => {
         }
         useForeground>
         <View style={styles.earthQuake}>
-          {isFetching ? (
+          {isFetchingEarthquakes ? (
             <View style={styles.locationIndicator}>
               <ActivityIndicator size="large" color={'black'} />
             </View>
@@ -127,9 +229,9 @@ const MapScreen = () => {
         </View>
       </TouchableComponent>
       <TouchableComponent
-        // onPress={() => {
-        //   getCurrentLocationHandler();
-        // }}
+        onPress={() => {
+          getCurrentLocationHandler();
+        }}
         background={
           Platform.Version >= 21
             ? TouchableNativeFeedback.Ripple('black', true)
