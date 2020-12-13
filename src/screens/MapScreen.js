@@ -9,7 +9,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import ENV from '../../env';
+import ENV from '../../env/env';
 import MapView, {Marker} from 'react-native-maps';
 import {Permissions} from 'react-native-unimodules';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -78,21 +78,13 @@ const MapScreen = () => {
     try {
       setIsFetching(true);
       const location = await Location.getCurrentPositionAsync({
-        timeout: 10000,
+        timeout: 5000,
       });
-
-      setPickedLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      console.log(location);
       selectLocationHandler({
         lat: location.coords.latitude,
         lng: location.coords.longitude,
       });
-      // loadVetDetails({
-      //   lat: location.coords.latitude,
-      //   lng: location.coords.longitude,
-      // });
     } catch (err) {
       console.log(err);
       Alert.alert(
@@ -131,7 +123,7 @@ const MapScreen = () => {
 
   return (
     <>
-      <MapView minZoomLevel={0} style={styles.map} initialRegionrr={mapRegion}>
+      <MapView minZoomLevel={0} style={styles.map} region={mapRegion}>
         {showFires &&
           !isFetchingFires &&
           fireEventData &&

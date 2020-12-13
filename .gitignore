@@ -1,7 +1,6 @@
 # OSX
 #
 .DS_Store
-env.js
 # Xcode
 #
 build/
@@ -57,3 +56,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+
+/env
+
