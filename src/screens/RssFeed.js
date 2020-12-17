@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, useWindowDimensions} from 'react-native';
 import * as rssParser from 'react-native-rss-parser';
 import HTML from 'react-native-render-html';
+import Header from '../components/Header';
 
 export default function RssFeed(props) {
   const [feed, setFeed] = useState([]);
@@ -37,6 +38,7 @@ export default function RssFeed(props) {
   const contentWidth = useWindowDimensions().width;
   return (
     <View>
+      <Header navigation={props.navigation} />
       {feed.map((item) => {
         const htmlContent = `
                     ${item.description}
@@ -47,7 +49,6 @@ export default function RssFeed(props) {
           </Text>
         );
       })}
-      <Text>RSS FEED Screen</Text>
     </View>
   );
 }

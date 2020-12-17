@@ -14,10 +14,11 @@ import MapView, {Marker} from 'react-native-maps';
 import {Permissions} from 'react-native-unimodules';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Location from 'expo-location';
+import {Header} from 'react-native/Libraries/NewAppScreen';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const MapScreen = () => {
+const MapScreen = (props) => {
   let TouchableComponent = TouchableOpacity;
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
@@ -31,12 +32,7 @@ const MapScreen = () => {
   const [isFetchingEarthquakes, setIsFetchingEarthquakes] = useState(false);
   const [isFetchingFloods, setIsFetchingFloods] = useState(false);
   const [pickedLocation, setPickedLocation] = useState();
-  const [mapRegion, setMapRegion] = useState({
-    latitude: 41.6086,
-    longitude: 21.7453,
-    latitudeDelta: 2.7,
-    longitudeDelta: 2.65,
-  });
+  const [mapRegion, setMapRegion] = useState(null);
 
   const fetchFires = async () => {
     if (showFires === true) {
@@ -123,7 +119,18 @@ const MapScreen = () => {
 
   return (
     <>
-      <MapView minZoomLevel={0} style={styles.map} region={mapRegion}>
+      <Header navigation={props.navigation} />
+
+      <MapView
+        minZoomLevel={0}
+        style={styles.map}
+        initialRegion={{
+          latitude: 41.6086,
+          longitude: 21.7453,
+          latitudeDelta: 2.7,
+          longitudeDelta: 2.65,
+        }}
+        region={mapRegion}>
         {showFires &&
           !isFetchingFires &&
           fireEventData &&
@@ -258,7 +265,7 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     position: 'absolute',
-    top: 0,
+    top: windowHeight / 10,
     left: 0,
     bottom: 0,
     right: 0,
