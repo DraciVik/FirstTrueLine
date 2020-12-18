@@ -10,20 +10,9 @@ export default function RssFeed(props) {
   useEffect(() => {
     const rssFeed = async () => {
       try {
-        console.clear();
-        console.log('STARTING');
         const response = await fetch('https://kumanovskimuabeti.mk/feed/');
         const newsFeedText = await response.text();
         const rssParsedResponse = await rssParser.parse(newsFeedText);
-        console.log(rssParsedResponse);
-        // const parsedRss = rssParser.parse(response)
-        // .then((response) => response.text())
-        // .then((responseData) => rssParser.parse(responseData))
-        // .then((rss) => {
-        //     console.log(rss.title);
-        //     console.log(rss.items.length);
-        // });
-        // console.log(parsedRss);
         setFeed(rssParsedResponse.items);
       } catch (err) {
         console.log('ERROR', err);

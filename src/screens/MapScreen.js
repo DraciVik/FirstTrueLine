@@ -14,7 +14,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {Permissions} from 'react-native-unimodules';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Location from 'expo-location';
-import {Header} from 'react-native/Libraries/NewAppScreen';
+import Header from '../components/Header';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -91,10 +91,6 @@ const MapScreen = (props) => {
     }
     setIsFetching(false);
   };
-
-  // const loadNasaData = async () => {
-  //   https://api.nasa.gov/planetary/apod?api_key=V4tyZdilz6SqNIymRf1Q6rOkGmvwNizwk80Yshqu
-  // }
 
   const selectLocationHandler = (event) => {
     setMapRegion({
