@@ -2,19 +2,22 @@ import React from 'react';
 import {Dimensions, Text, View, StyleSheet} from 'react-native';
 import Logo from '../assets/logo.svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import '../localization/Localization';
+import {useTranslation} from 'react-i18next';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Header = (props) => {
+  const {t} = useTranslation();
   return (
     <View style={styles.headerContainer}>
       <View style={styles.logoContainer}>
         <Logo style={styles.logo} />
       </View>
       <View style={styles.headerTitleContainer}>
-        <Text style={styles.headerText}>FIRST LINE</Text>
-        <Text style={styles.headerText}>OF TRUTH</Text>
+        <Text style={styles.headerText}>{t('header.header1')}</Text>
+        <Text style={styles.headerText}>{t('header.header2')}</Text>
       </View>
       <View style={styles.menuContainer}>
         <MaterialCommunityIcons
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: '#0071bc',
-    height: windowHeight / 10,
+    height: windowHeight / 6,
     flexDirection: 'row',
   },
   headerTitleContainer: {

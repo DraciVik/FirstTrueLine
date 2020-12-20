@@ -2,13 +2,19 @@ import React from 'react';
 import Pic from '../assets/karta-mk.svg';
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import Header from '../components/Header';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Accordian from '../components/Accordian';
 import {AccordionData} from '../data/HardcodedData';
+import '../localization/Localization';
+import {useTranslation} from 'react-i18next';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function HomeScreen(props) {
+  const {t} = useTranslation();
+  console.log(t('common.news'));
   return (
     <View style={styles.container}>
       <Header navigation={props.navigation} />
