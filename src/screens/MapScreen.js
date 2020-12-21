@@ -24,7 +24,9 @@ const MapScreen = (props) => {
     TouchableComponent = TouchableNativeFeedback;
   }
   const [fireEventData, setFireEventData] = useState([]);
+  const [floodsEventData, setFloodsEventData] = useState([]);
   const [showFires, setShowFires] = useState(false);
+  const [showFloods, setShowFloods] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingFires, setIsFetchingFires] = useState(false);
   const [error, setError] = useState(null);
@@ -49,6 +51,23 @@ const MapScreen = (props) => {
     console.log(events);
     setIsFetchingFires(false);
     setShowFires(true);
+  };
+
+  const fetchFloods = async () => {
+    if (showFloods === true) {
+      setShowFloods(false);
+      return;
+    }
+    setShowFloods(true);
+
+    const res = await fetch(
+      `https://eonet.sci.gsfc.nasa.gov/api/v2.1/events?api_key=${ENV.nasaAPIKey}`,
+    );
+    const {events} = await res.json();
+    setFloodsEventData(events);
+    console.log(events);
+    setIsFetchingFloods(false);
+    setShowFloods(true);
   };
 
   const verifyPermissions = async () => {
@@ -183,7 +202,8 @@ const MapScreen = (props) => {
             ? TouchableNativeFeedback.Ripple('black', true)
             : TouchableNativeFeedback.SelectableBackground()
         }
-        useForeground>
+        useForeground
+        onPress={() => fetchFloods()}>
         <View style={styles.flood}>
           {isFetchingFloods ? (
             <View style={styles.locationIndicator}>

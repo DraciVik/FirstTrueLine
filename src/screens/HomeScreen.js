@@ -1,5 +1,5 @@
 import React from 'react';
-import Pic from '../assets/karta-mk.svg';
+
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import Header from '../components/Header';
 
@@ -14,7 +14,6 @@ const windowHeight = Dimensions.get('window').height;
 
 export default function HomeScreen(props) {
   const {t} = useTranslation();
-  console.log(t('common.news'));
   return (
     <View style={styles.container}>
       <Header navigation={props.navigation} />
@@ -24,7 +23,7 @@ export default function HomeScreen(props) {
           name={'volume-high'}
           color="#fff"
         />
-        <Text style={styles.alarmSigns}>SIGNS OF ALARM</Text>
+        <Text style={styles.alarmSigns}>{t('homeScreen:sings')}</Text>
       </View>
       <ScrollView>
         {AccordionData.map((accordian, index) => {
@@ -32,8 +31,8 @@ export default function HomeScreen(props) {
             <Accordian
               accordianBackgroundColor={accordian.accordionColor}
               key={accordian.title}
-              title={accordian.title}
-              data={accordian.data}
+              title={t(`homeScreen:${accordian.title}`)}
+              data={t(`homeScreen:${accordian.data}`)}
             />
           );
         })}

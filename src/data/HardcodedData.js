@@ -1,26 +1,22 @@
 export const AccordionData = [
   {
-    title: 'AIR DANGER',
-    data:
-      'Знак за воздушна опасност се емитува со вклучување на сирените од системите за тревожење со непрекинат завивачки тон во траење од 60 (шеесет) секунди.',
+    title: 'dangers.title.air',
+    data: 'dangers.body.air',
     accordionColor: '#007dbc',
   },
   {
-    title: 'RADIOLOGICAL-CHEMICAL-BIOLOGICAL HAZARD',
-    data:
-      'Знак за радиолошко-хемиско-биолошка опасност се емитува со вклучување на сирените од системите за тревожење во траење од 90 (деведесет) секунди, со три завивачки тона по 20 (дваесет) секунди и две паузи помеѓу тоновите по 15 (петнаесет) секунди.',
+    title: 'dangers.title.RCB',
+    data: 'dangers.body.RCB',
     accordionColor: '#006496',
   },
   {
-    title: 'DANGER OF NATURAL ELEMENTS CASES AND OTHER ACCIDENTS',
-    data:
-      'Знак за опасност од елементарни природни непогоди и други несреќи се емитува со вклучување на сирените од системите за тревожење во траење од 60 (шеесет) секунди, во комбинација на два еднолични тона по 20 (дваесет) секунди и еден завивачки тон од 20 (дваесет) секунди помеѓу првиот и вториот едноличен тон.',
+    title: 'dangers.title.elements',
+    data: 'dangers.body.elements',
     accordionColor: '#004a70',
   },
   {
-    title: 'TERMINATION OF HAZARD',
-    data:
-      'Знак за престанок на опасноста се емитува при престанок на ризикот и опасноста со вклучување на сирените од системите за тревожење со едноличен тон во траење од 60 секунди.',
+    title: 'dangers.title.end',
+    data: 'dangers.body.end',
     accordionColor: '#22b573',
   },
 ];

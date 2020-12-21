@@ -1,33 +1,36 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import RssFeed from '../screens/RssFeed';
 import MapScreen from '../screens/MapScreen';
 import Colors from '../data/Colors';
 import Pic from '../assets/karta-mk.svg';
+import '../localization/Localization';
+import {useTranslation} from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const TabNavigator = () => {
+  const {t} = useTranslation();
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={({route, navigation}) => ({
         tabBarLabel: ({focused, color, position}) => {
           let title;
           let backgroundColor;
           if (route.name === 'Home') {
-            title = 'Centar za upravuvanje so krizi';
+            title = t('CUK');
             backgroundColor = Colors.cuk;
           } else if (route.name === 'RSSFeed') {
-            title = 'NEWS';
+            title = t('news');
             backgroundColor = Colors.news;
           } else if (route.name === 'Map') {
-            title = 'MAP';
+            title = t('map');
             backgroundColor = Colors.map;
           }
 

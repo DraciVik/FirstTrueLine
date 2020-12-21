@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: '#0071bc',
-    height: windowHeight / 6,
+    height: windowHeight / 10,
     flexDirection: 'row',
   },
   headerTitleContainer: {

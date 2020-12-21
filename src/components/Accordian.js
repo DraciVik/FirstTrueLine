@@ -8,9 +8,11 @@ import {
   Platform,
   UIManager,
   Dimensions,
+  TouchableNativeFeedback,
 } from 'react-native';
 // import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AudioPlayer from './AudioPlayer';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,6 +30,10 @@ export default class Accordian extends Component {
   }
 
   render() {
+    let TouchableComponent = TouchableOpacity;
+    if (Platform.OS === 'android' && Platform.Version >= 21) {
+      TouchableComponent = TouchableNativeFeedback;
+    }
     return (
       <View>
         <TouchableOpacity
@@ -48,7 +54,31 @@ export default class Accordian extends Component {
         <View style={styles.parentHr} />
         {this.state.expanded && (
           <View style={styles.child}>
-            <Text>{this.props.data}</Text>
+            <Text style={styles.bodyTextColor}>{this.props.data}</Text>
+            <TouchableComponent
+              background={
+                Platform.Version >= 21
+                  ? TouchableNativeFeedback.Ripple('grey', true)
+                  : TouchableNativeFeedback.SelectableBackground()
+              }
+              useForeground>
+              <View
+                style={{
+                  width: windowWidth / 8.5,
+                  height: windowWidth / 8.5,
+                  backgroundColor: '#c1272d',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                }}>
+                <MaterialCommunityIcons
+                  size={windowWidth / 10}
+                  name={'volume-high'}
+                  color="#fff"
+                />
+              </View>
+            </TouchableComponent>
+            {/* <AudioPlayer /> */}
           </View>
         )}
       </View>
@@ -83,7 +113,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   child: {
+    alignItems: 'center',
     backgroundColor: '#e6e6e6',
     padding: 16,
   },
+  bodyTextColor: {color: '#004a70'},
 });
