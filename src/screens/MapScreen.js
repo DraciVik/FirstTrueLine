@@ -23,51 +23,76 @@ const MapScreen = (props) => {
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
   }
+  const [eventData, setEventData] = useState([]);
   const [fireEventData, setFireEventData] = useState([]);
   const [floodsEventData, setFloodsEventData] = useState([]);
+  const [earthquakesEventData, setEarthquakesEventData] = useState([]);
+
   const [showFires, setShowFires] = useState(false);
   const [showFloods, setShowFloods] = useState(false);
+  const [showEarthquakes, setShowEarthquakes] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingFires, setIsFetchingFires] = useState(false);
-  const [error, setError] = useState(null);
-  const [isFetching, setIsFetching] = useState(false);
   const [isFetchingEarthquakes, setIsFetchingEarthquakes] = useState(false);
   const [isFetchingFloods, setIsFetchingFloods] = useState(false);
-  const [pickedLocation, setPickedLocation] = useState();
+  const [error, setError] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
+
   const [mapRegion, setMapRegion] = useState(null);
 
-  const fetchFires = async () => {
-    if (showFires === true) {
+  useEffect(() => {
+    const fires = eventData.filter((event) => event.categories[0].id === 8);
+    const floods = eventData.filter((event) => event.categories[0].id === 9);
+    const earthquakes = eventData.filter(
+      (event) => event.categories[0].id === 16,
+    );
+    setFireEventData(fires);
+    setFloodsEventData(floods);
+    setEarthquakesEventData(earthquakes);
+  }, [eventData]);
+
+  const fetchEvents = async () => {
+    if (eventData.length === 0) {
+      const res = await fetch(
+        `https://eonet.sci.gsfc.nasa.gov/api/v2.1/events?api_key=${ENV.nasaAPIKey}`,
+      );
+      const {events} = await res.json();
+      setEventData(events);
+    } else {
+      return;
+    }
+  };
+  const handleFires = async () => {
+    if (showFires) {
       setShowFires(false);
       return;
     }
     setIsFetchingFires(true);
-
-    const res = await fetch(
-      `https://eonet.sci.gsfc.nasa.gov/api/v2.1/events?api_key=${ENV.nasaAPIKey}`,
-    );
-    const {events} = await res.json();
-    setFireEventData(events);
-    console.log(events);
-    setIsFetchingFires(false);
+    await fetchEvents();
     setShowFires(true);
+    setIsFetchingFires(false);
   };
 
-  const fetchFloods = async () => {
-    if (showFloods === true) {
+  const handleFloods = async () => {
+    if (showFloods) {
       setShowFloods(false);
       return;
     }
+    setIsFetchingFloods(true);
+    await fetchEvents();
     setShowFloods(true);
-
-    const res = await fetch(
-      `https://eonet.sci.gsfc.nasa.gov/api/v2.1/events?api_key=${ENV.nasaAPIKey}`,
-    );
-    const {events} = await res.json();
-    setFloodsEventData(events);
-    console.log(events);
     setIsFetchingFloods(false);
-    setShowFloods(true);
+  };
+
+  const handleEarthquakes = async () => {
+    if (showEarthquakes) {
+      setShowEarthquakes(false);
+      return;
+    }
+    setIsFetchingEarthquakes(true);
+    await fetchEvents();
+    setShowEarthquakes(true);
+    setIsFetchingEarthquakes(false);
   };
 
   const verifyPermissions = async () => {
@@ -86,7 +111,6 @@ const MapScreen = (props) => {
   const getCurrentLocationHandler = async () => {
     const hasPermission = await verifyPermissions();
     console.clear();
-    console.log(hasPermission);
     if (!hasPermission) {
       return;
     }
@@ -95,13 +119,11 @@ const MapScreen = (props) => {
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000,
       });
-      console.log(location);
       selectLocationHandler({
         lat: location.coords.latitude,
         lng: location.coords.longitude,
       });
     } catch (err) {
-      console.log(err);
       Alert.alert(
         'Could not fetch location',
         'Please try again later or pick a location on the map',
@@ -147,28 +169,58 @@ const MapScreen = (props) => {
         }}
         region={mapRegion}>
         {showFires &&
-          !isFetchingFires &&
           fireEventData &&
           fireEventData.map((value, index) => {
-            console.table(value.categories);
-            if (value.categories[0].id === 8) {
-              console.log('VALUE', value);
-              return (
-                <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: value.geometries[0].coordinates[1],
-                    longitude: value.geometries[0].coordinates[0],
-                  }}>
-                  <MaterialCommunityIcons
-                    name={'fire'}
-                    color="red"
-                    size={windowWidth / 13}
-                  />
-                </Marker>
-              );
-            }
-            return null;
+            return (
+              <Marker
+                key={value.geometries[0].coordinates[1] + index}
+                coordinate={{
+                  latitude: value.geometries[0].coordinates[1],
+                  longitude: value.geometries[0].coordinates[0],
+                }}>
+                <MaterialCommunityIcons
+                  name={'fire'}
+                  color="red"
+                  size={windowWidth / 13}
+                />
+              </Marker>
+            );
+          })}
+        {showFloods &&
+          floodsEventData &&
+          floodsEventData.map((value, index) => {
+            return (
+              <Marker
+                key={value.geometries[0].coordinates[1] + index}
+                coordinate={{
+                  latitude: value.geometries[0].coordinates[1],
+                  longitude: value.geometries[0].coordinates[0],
+                }}>
+                <MaterialCommunityIcons
+                  name={'home-flood'}
+                  color="blue"
+                  size={windowWidth / 13}
+                />
+              </Marker>
+            );
+          })}
+        {showEarthquakes &&
+          earthquakesEventData &&
+          earthquakesEventData.map((value, index) => {
+            return (
+              <Marker
+                key={value.geometries[0].coordinates[1] + index}
+                coordinate={{
+                  latitude: value.geometries[0].coordinates[1],
+                  longitude: value.geometries[0].coordinates[0],
+                }}>
+                <MaterialCommunityIcons
+                  name={'leak'}
+                  color="red"
+                  size={windowWidth / 13}
+                />
+              </Marker>
+            );
           })}
       </MapView>
 
@@ -178,8 +230,8 @@ const MapScreen = (props) => {
             ? TouchableNativeFeedback.Ripple('black', true)
             : TouchableNativeFeedback.SelectableBackground()
         }
-        onPress={() => fetchFires()}
-        useForeground>
+        useForeground
+        onPress={() => handleFires()}>
         <View style={styles.fire}>
           {isFetchingFires ? (
             <View>
@@ -203,17 +255,17 @@ const MapScreen = (props) => {
             : TouchableNativeFeedback.SelectableBackground()
         }
         useForeground
-        onPress={() => fetchFloods()}>
+        onPress={() => handleFloods()}>
         <View style={styles.flood}>
           {isFetchingFloods ? (
-            <View style={styles.locationIndicator}>
+            <View>
               <ActivityIndicator size="large" color={'black'} />
             </View>
           ) : (
             <View style={styles.floodContainer}>
               <MaterialCommunityIcons
                 name={'home-flood'}
-                color="black"
+                color={showFloods ? 'blue' : 'black'}
                 size={windowWidth / 13}
               />
             </View>
@@ -226,17 +278,18 @@ const MapScreen = (props) => {
             ? TouchableNativeFeedback.Ripple('black', true)
             : TouchableNativeFeedback.SelectableBackground()
         }
-        useForeground>
+        useForeground
+        onPress={() => handleEarthquakes()}>
         <View style={styles.earthQuake}>
           {isFetchingEarthquakes ? (
-            <View style={styles.locationIndicator}>
+            <View>
               <ActivityIndicator size="large" color={'black'} />
             </View>
           ) : (
             <View style={styles.earthquakeContainer}>
               <MaterialCommunityIcons
                 name={'leak'}
-                color="black"
+                color={showEarthquakes ? 'green' : 'black'}
                 size={windowWidth / 13}
               />
             </View>
