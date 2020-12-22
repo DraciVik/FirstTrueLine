@@ -33,6 +33,7 @@ export default function HomeScreen(props) {
               key={accordian.title}
               title={t(`homeScreen:${accordian.title}`)}
               data={t(`homeScreen:${accordian.data}`)}
+              audioSource={accordian.audioFile}
             />
           );
         })}

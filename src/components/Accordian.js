@@ -30,10 +30,6 @@ export default class Accordian extends Component {
   }
 
   render() {
-    let TouchableComponent = TouchableOpacity;
-    if (Platform.OS === 'android' && Platform.Version >= 21) {
-      TouchableComponent = TouchableNativeFeedback;
-    }
     return (
       <View>
         <TouchableOpacity
@@ -55,30 +51,8 @@ export default class Accordian extends Component {
         {this.state.expanded && (
           <View style={styles.child}>
             <Text style={styles.bodyTextColor}>{this.props.data}</Text>
-            <TouchableComponent
-              background={
-                Platform.Version >= 21
-                  ? TouchableNativeFeedback.Ripple('grey', true)
-                  : TouchableNativeFeedback.SelectableBackground()
-              }
-              useForeground>
-              <View
-                style={{
-                  width: windowWidth / 8.5,
-                  height: windowWidth / 8.5,
-                  backgroundColor: '#c1272d',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                }}>
-                <MaterialCommunityIcons
-                  size={windowWidth / 10}
-                  name={'volume-high'}
-                  color="#fff"
-                />
-              </View>
-            </TouchableComponent>
-            {/* <AudioPlayer /> */}
+
+            <AudioPlayer source={this.props.audioSource} />
           </View>
         )}
       </View>
