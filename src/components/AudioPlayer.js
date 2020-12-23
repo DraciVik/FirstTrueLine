@@ -34,7 +34,7 @@ export default function AudioPlayer(props) {
     });
     console.log('SOUND Loaded initially', sound.current);
   }, [props.source]);
-
+  // java -jar "/home/viktor/Desktop/bundletool.jar" build-apks --bundle=app-release.aab --output=myapp.apks --ks="/home/viktor/Desktop/Repos/FirstTrueLine/android/app/my-upload-key.keystore" --ks-pass=pass:firsttrueline --ks-key-alias=my-key-alias --key-pass=pass:firsttrueline --mode=universal
   const handlePress = () => {
     console.log(sound.current);
     if (sound.current._playing) {

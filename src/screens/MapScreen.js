@@ -15,6 +15,7 @@ import {Permissions} from 'react-native-unimodules';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -108,9 +109,18 @@ const MapScreen = (props) => {
     return true;
   };
 
+  const selectLocationHandler = (event) => {
+    setMapRegion({
+      latitude: event.lat,
+      longitude: event.lng,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
+
   const getCurrentLocationHandler = async () => {
     const hasPermission = await verifyPermissions();
-    console.clear();
+    console.log('HAS PERMISSION', hasPermission);
     if (!hasPermission) {
       return;
     }
@@ -119,6 +129,7 @@ const MapScreen = (props) => {
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000,
       });
+      console.log('location', location);
       selectLocationHandler({
         lat: location.coords.latitude,
         lng: location.coords.longitude,
@@ -131,15 +142,6 @@ const MapScreen = (props) => {
       );
     }
     setIsFetching(false);
-  };
-
-  const selectLocationHandler = (event) => {
-    setMapRegion({
-      latitude: event.lat,
-      longitude: event.lng,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
   };
 
   if (isLoading) {

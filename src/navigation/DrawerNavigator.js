@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Text,
   View,
   StyleSheet,
@@ -19,7 +18,6 @@ import {useTranslation} from 'react-i18next';
 import MkFlag from '../assets/mk-flag.svg';
 import EnFlag from '../assets/en-flag.svg';
 import {ScrollView} from 'react-native-gesture-handler';
-import NatoLogo from '../assets/natoLogo.svg';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
