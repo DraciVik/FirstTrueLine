@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import * as rssParser from 'react-native-rss-parser';
 import HTML from 'react-native-render-html';
@@ -19,6 +20,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function RssFeed(props) {
+  const [isLoading, setIsLoading] = useState(false);
   const [feed, setFeed] = useState([]);
 
   let TouchableComponent = TouchableOpacity;
@@ -38,6 +40,8 @@ export default function RssFeed(props) {
 
   useEffect(() => {
     const rssFeed = async () => {
+      setIsLoading(true);
+
       const myHeaders = new Headers();
       myHeaders.append(
         'Cookie',
@@ -51,6 +55,7 @@ export default function RssFeed(props) {
       const rssParsedResponse = await rssParser.parse(newsFeedText);
       console.log(rssParsedResponse);
       setFeed(rssParsedResponse.items);
+      setIsLoading(false);
     };
     rssFeed();
     return () => {
@@ -59,10 +64,17 @@ export default function RssFeed(props) {
   }, []);
 
   const contentWidth = useWindowDimensions().width;
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={'black'} />
+      </View>
+    );
+  }
   return (
     <>
       <Header navigation={props.navigation} />
-
       <ScrollView>
         {feed.map((item) => {
           console.log('ITEM', item);
@@ -72,7 +84,6 @@ export default function RssFeed(props) {
           const description = item.description;
           // console.log('description', description);
           const url = item.links[0].url;
-          console.log(url);
           const htmlContent = `${description}`;
           return (
             <View

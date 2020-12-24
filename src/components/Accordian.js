@@ -22,6 +22,7 @@ export default class Accordian extends Component {
     this.state = {
       data: props.data,
       expanded: false,
+      audioLength: undefined,
     };
 
     if (Platform.OS === 'android') {
@@ -29,7 +30,14 @@ export default class Accordian extends Component {
     }
   }
 
+  setAudioLength = (audioLength) => {
+    this.setState({
+      audioLength: audioLength,
+    });
+  };
+
   render() {
+    console.log(this.state.audioLength);
     return (
       <View>
         <TouchableOpacity
@@ -51,8 +59,37 @@ export default class Accordian extends Component {
         {this.state.expanded && (
           <View style={styles.child}>
             <Text style={styles.bodyTextColor}>{this.props.data}</Text>
-
-            <AudioPlayer source={this.props.audioSource} />
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '80%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <AudioPlayer
+                setAudioLength={this.setAudioLength}
+                source={this.props.audioSource}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginLeft: -windowWidth / 45,
+                  borderRadius: 10,
+                }}>
+                {this.props.children}
+                {/* <View
+                  style={{
+                    borderRadius: 10,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    // zIndex: -2,
+                    width: '60%',
+                    backgroundColor: 'rgba(0,0,0, 0.3)',
+                  }}></View> */}
+              </View>
+            </View>
           </View>
         )}
       </View>

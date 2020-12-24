@@ -15,6 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 export default function AudioPlayer(props) {
+  const [pressed, setPressed] = useState(false);
   let TouchableComponent = TouchableOpacity;
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
@@ -27,18 +28,15 @@ export default function AudioPlayer(props) {
         console.log('FAILED', error);
         return;
       }
-      // sound.current.play(() => {
-      //   console.log('RELEASE', sound.current.release);
-      //   sound.current.release;
-      // });
     });
     console.log('SOUND Loaded initially', sound.current);
   }, [props.source]);
   // java -jar "/home/viktor/Desktop/bundletool.jar" build-apks --bundle=app-release.aab --output=myapp.apks --ks="/home/viktor/Desktop/Repos/FirstTrueLine/android/app/my-upload-key.keystore" --ks-pass=pass:firsttrueline --ks-key-alias=my-key-alias --key-pass=pass:firsttrueline --mode=universal
   const handlePress = () => {
+    setPressed((prevState) => !prevState);
     console.log(sound.current);
     if (sound.current._playing) {
-      console.log('IF playing', sound.current._playing);
+      console.log('IF playing', sound.current);
       sound.current.stop();
       return;
     }
@@ -59,7 +57,7 @@ export default function AudioPlayer(props) {
 
   return (
     <>
-      <View style={{borderRadius: 10, overflow: 'hidden'}}>
+      <View style={{borderRadius: 10, overflow: 'hidden', zIndex: 3}}>
         <TouchableComponent
           background={
             Platform.Version >= 21
@@ -77,6 +75,8 @@ export default function AudioPlayer(props) {
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 10,
+              borderColor: 'black',
+              borderWidth: pressed ? 3 : 0,
             }}>
             <MaterialCommunityIcons
               size={windowWidth / 10}

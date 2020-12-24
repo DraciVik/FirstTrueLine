@@ -8,6 +8,7 @@ import {
   TouchableNativeFeedback,
   Platform,
   Image,
+  Linking,
 } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
@@ -59,6 +60,15 @@ const DrawerNavigation = () => {
   const {t, i18n} = useTranslation();
   const selectedLngCode = i18n.language;
   const setLng = (lngCode) => i18n.changeLanguage(lngCode);
+  const handleURLOpen = (url) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log("Don't know how to open URI: ", url);
+      }
+    });
+  };
   //
   return (
     <NavigationContainer>
@@ -68,25 +78,50 @@ const DrawerNavigation = () => {
           return (
             <View style={styles.drawerContainer}>
               <View style={styles.logos}>
-                <Image
-                  style={{
-                    width: (windowWidth / 10) * natoRatio,
-                    height: windowWidth / 10,
-                  }}
-                  source={require('../assets/nato.png')}
-                />
-                <Image
-                  style={{
-                    width: (windowWidth / 10) * cepakRatio,
-                    height: windowWidth / 10,
-                  }}
-                  source={require('../assets/cepaklogo.png')}
-                />
+                <TouchableComponent
+                  onPress={() => handleURLOpen('https://www.nato.int/')}
+                  background={
+                    Platform.Version >= 21
+                      ? TouchableNativeFeedback.Ripple('grey', true)
+                      : TouchableNativeFeedback.SelectableBackground()
+                  }
+                  useForeground>
+                  <Image
+                    style={{
+                      width: (windowWidth / 10) * natoRatio,
+                      height: windowWidth / 10,
+                    }}
+                    source={require('../assets/nato.png')}
+                  />
+                </TouchableComponent>
+                <TouchableComponent
+                  onPress={() => handleURLOpen('http://cepacsk.org/en/')}
+                  background={
+                    Platform.Version >= 21
+                      ? TouchableNativeFeedback.Ripple('grey', true)
+                      : TouchableNativeFeedback.SelectableBackground()
+                  }
+                  useForeground>
+                  <Image
+                    style={{
+                      width: (windowWidth / 10) * cepakRatio,
+                      height: windowWidth / 10,
+                    }}
+                    source={require('../assets/cepaklogo.png')}
+                  />
+                </TouchableComponent>
               </View>
               <ScrollView>
                 <Text style={styles.aboutUsText}>{t('drawer:about')}</Text>
                 <Text style={{color: '#004a70'}}>
                   {t('drawer:description')}
+                </Text>
+
+                <Text style={styles.aboutUsText}>
+                  {t('drawer:aboutProject')}
+                </Text>
+                <Text style={{color: '#004a70'}}>
+                  {t('drawer:aboutProjectDescription')}
                 </Text>
               </ScrollView>
 
