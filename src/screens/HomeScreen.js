@@ -1,26 +1,21 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import Header from '../components/Header';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Accordian from '../components/Accordian';
-import {AccordionData} from '../data/HardcodedData';
+import {AccordionData, ElementalData} from '../data/HardcodedData';
 import '../localization/Localization';
 import {useTranslation} from 'react-i18next';
-import Vozdusna from '../assets/vozdusna.svg';
-import useInterval from '../hooks/useInterval';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function HomeScreen(props) {
-  const [percent, setPercent] = useState(0);
   const {t} = useTranslation();
 
-  // useInterval(() => {
-  //   setPercent((prevPercent) => prevPercent + 5);
-  // });
+  console.log('ELEMENTAL DATA', ElementalData);
 
   return (
     <View style={styles.container}>
@@ -34,17 +29,28 @@ export default function HomeScreen(props) {
         <Text style={styles.alarmSigns}>{t('homeScreen:sings')}</Text>
       </View>
       <ScrollView>
-        {AccordionData.map((accordian, index) => {
+        {AccordionData.map((accordian) => {
+          let elementalsApply = false;
+          if (
+            t(`homeScreen:${accordian.title}`) ===
+              'DANGER OF NATURAL ELEMENT CASES AND OTHER ACCIDENTS' ||
+            t(`homeScreen:${accordian.title}`) ===
+              'ОПАСНОСТ ОД ЕЛЕМЕНТАРНИ ПРИРОДНИ НЕПОГОДИ И ДРУГИ НЕСРЕЌИ'
+          ) {
+            elementalsApply = true;
+          }
           return (
             <Accordian
               // handleSoundClick={() => handleSoundClick()}
               accordianBackgroundColor={accordian.accordionColor}
-              key={accordian.title}
+              elementalsApply={elementalsApply}
+              key={t(`homeScreen:${accordian.title}`)}
               title={t(`homeScreen:${accordian.title}`)}
               data={t(`homeScreen:${accordian.data}`)}
-              audioSource={accordian.audioFile}>
+              audioSource={accordian.audioFile}
+              afterSound={t(`homeScreen:${accordian.afterSound}`)}>
               {/* <Vozdusna style={styles.soundSvg} /> */}
-              {accordian.audioSvg}
+              <View style={{flexDirection: 'row'}}>{accordian.audioSvg}</View>
             </Accordian>
           );
         })}

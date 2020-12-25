@@ -13,6 +13,7 @@ import {
 // import Icon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AudioPlayer from './AudioPlayer';
+import ElementalAccordian from '../components/ElementalAccordian';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -38,6 +39,7 @@ export default class Accordian extends Component {
 
   render() {
     console.log(this.state.audioLength);
+
     return (
       <View>
         <TouchableOpacity
@@ -57,27 +59,30 @@ export default class Accordian extends Component {
         </TouchableOpacity>
         <View style={styles.parentHr} />
         {this.state.expanded && (
-          <View style={styles.child}>
-            <Text style={styles.bodyTextColor}>{this.props.data}</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '80%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <AudioPlayer
-                setAudioLength={this.setAudioLength}
-                source={this.props.audioSource}
-              />
+          <>
+            <View style={styles.child}>
+              <Text style={styles.bodyTextColor}>{this.props.data}</Text>
               <View
                 style={{
                   flexDirection: 'row',
-                  marginLeft: -windowWidth / 45,
-                  borderRadius: 10,
+                  width: '80%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                {this.props.children}
-                {/* <View
+                {this.props.audioSource && (
+                  <AudioPlayer
+                    setAudioLength={this.setAudioLength}
+                    source={this.props.audioSource}
+                  />
+                )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginLeft: -windowWidth / 45,
+                    borderRadius: 10,
+                  }}>
+                  {this.props.children}
+                  {/* <View
                   style={{
                     borderRadius: 10,
                     position: 'absolute',
@@ -88,9 +93,16 @@ export default class Accordian extends Component {
                     width: '60%',
                     backgroundColor: 'rgba(0,0,0, 0.3)',
                   }}></View> */}
+                </View>
               </View>
+              <Text style={{...styles.bodyTextColor, fontWeight: 'bold'}}>
+                {this.props.afterSound !== 'undefined'
+                  ? this.props.afterSound
+                  : null}
+              </Text>
             </View>
-          </View>
+            {this.props.elementalsApply && <ElementalAccordian />}
+          </>
         )}
       </View>
     );

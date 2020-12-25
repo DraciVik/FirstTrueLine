@@ -78,22 +78,25 @@ const DrawerNavigation = () => {
           return (
             <View style={styles.drawerContainer}>
               <View style={styles.logos}>
-                <TouchableComponent
-                  onPress={() => handleURLOpen('https://www.nato.int/')}
-                  background={
-                    Platform.Version >= 21
-                      ? TouchableNativeFeedback.Ripple('grey', true)
-                      : TouchableNativeFeedback.SelectableBackground()
-                  }
-                  useForeground>
-                  <Image
-                    style={{
-                      width: (windowWidth / 10) * natoRatio,
-                      height: windowWidth / 10,
-                    }}
-                    source={require('../assets/nato.png')}
-                  />
-                </TouchableComponent>
+                <View style={styles.natoContainer}>
+                  <TouchableComponent
+                    onPress={() => handleURLOpen('https://www.nato.int/')}
+                    background={
+                      Platform.Version >= 21
+                        ? TouchableNativeFeedback.Ripple('grey', true)
+                        : TouchableNativeFeedback.SelectableBackground()
+                    }
+                    useForeground>
+                    <Image
+                      style={{
+                        width: (windowWidth / 10) * natoRatio,
+                        height: windowWidth / 10,
+                      }}
+                      source={require('../assets/nato.png')}
+                    />
+                  </TouchableComponent>
+                  <Text style={styles.natoText}>{t('drawer:nato')}</Text>
+                </View>
                 <TouchableComponent
                   onPress={() => handleURLOpen('http://cepacsk.org/en/')}
                   background={
@@ -113,14 +116,12 @@ const DrawerNavigation = () => {
               </View>
               <ScrollView>
                 <Text style={styles.aboutUsText}>{t('drawer:about')}</Text>
-                <Text style={{color: '#004a70'}}>
-                  {t('drawer:description')}
-                </Text>
+                <Text style={styles.textColor}>{t('drawer:description')}</Text>
 
                 <Text style={styles.aboutUsText}>
                   {t('drawer:aboutProject')}
                 </Text>
-                <Text style={{color: '#004a70'}}>
+                <Text style={styles.textColor}>
                   {t('drawer:aboutProjectDescription')}
                 </Text>
               </ScrollView>
@@ -176,8 +177,19 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
+  natoText: {
+    fontSize: windowWidth / 40,
+    marginHorizontal: windowWidth / 40,
+    fontWeight: 'bold',
+  },
+  natoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '50%',
+  },
+  textColor: {color: '#004a70'},
 });
 
 export default DrawerNavigation;

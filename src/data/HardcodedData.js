@@ -22,6 +22,7 @@ export const AccordionData = [
   {
     title: 'dangers.title.air',
     data: 'dangers.body.air',
+    afterSound: 'dangers.afterSound.air',
     accordionColor: '#007dbc',
     audioFile: 'vozdusna.wav',
     audioSvg: <Vozdusna style={styles.soundSvg} />,
@@ -29,6 +30,7 @@ export const AccordionData = [
   {
     title: 'dangers.title.RCB',
     data: 'dangers.body.RCB',
+    afterSound: 'dangers.afterSound.RCB',
     accordionColor: '#006496',
     audioFile: 'radiolosko_hemisko_bioloska.wav',
     audioSvg: <Radioloski style={styles.soundSvg} />,
@@ -46,5 +48,22 @@ export const AccordionData = [
     accordionColor: '#22b573',
     audioFile: 'prestanok.wav',
     audioSvg: <Prestanok style={styles.soundSvg} />,
+  },
+];
+export const ElementalData = [
+  {
+    title: 'elementals.title.earthquake',
+    data: 'elementals.body.earthquake',
+    accordionColor: '#22b573',
+  },
+  {
+    title: 'elementals.title.flood',
+    data: 'elementals.body.flood',
+    accordionColor: '#007dbc',
+  },
+  {
+    title: 'elementals.title.fire',
+    data: 'elementals.body.fire',
+    accordionColor: '#c1272d',
   },
 ];
