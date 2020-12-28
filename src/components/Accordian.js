@@ -38,8 +38,6 @@ export default class Accordian extends Component {
   };
 
   render() {
-    console.log(this.state.audioLength);
-
     return (
       <View>
         <TouchableOpacity

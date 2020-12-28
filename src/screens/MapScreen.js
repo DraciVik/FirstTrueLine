@@ -120,7 +120,6 @@ const MapScreen = (props) => {
 
   const getCurrentLocationHandler = async () => {
     const hasPermission = await verifyPermissions();
-    console.log('HAS PERMISSION', hasPermission);
     if (!hasPermission) {
       return;
     }
@@ -129,7 +128,6 @@ const MapScreen = (props) => {
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000,
       });
-      console.log('location', location);
       selectLocationHandler({
         lat: location.coords.latitude,
         lng: location.coords.longitude,

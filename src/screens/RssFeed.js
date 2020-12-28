@@ -53,7 +53,6 @@ export default function RssFeed(props) {
       });
       const newsFeedText = await response.text();
       const rssParsedResponse = await rssParser.parse(newsFeedText);
-      console.log(rssParsedResponse);
       setFeed(rssParsedResponse.items);
       setIsLoading(false);
     };
@@ -77,12 +76,10 @@ export default function RssFeed(props) {
       <Header navigation={props.navigation} />
       <ScrollView>
         {feed.map((item) => {
-          console.log('ITEM', item);
           const authors = item.authors.map((value) => value.name).join(', ');
           const title = item.title;
           const content = item.content;
           const description = item.description;
-          // console.log('description', description);
           const url = item.links[0].url;
           const htmlContent = `${description}`;
           return (

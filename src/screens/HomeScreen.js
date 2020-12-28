@@ -15,8 +15,6 @@ const windowHeight = Dimensions.get('window').height;
 export default function HomeScreen(props) {
   const {t} = useTranslation();
 
-  console.log('ELEMENTAL DATA', ElementalData);
-
   return (
     <View style={styles.container}>
       <Header navigation={props.navigation} />

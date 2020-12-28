@@ -77,6 +77,37 @@ const DrawerNavigation = () => {
         drawerContent={() => {
           return (
             <View style={styles.drawerContainer}>
+              <View style={styles.languages}>
+                {LANGS.map((lang) => {
+                  const selected = lang.lngCode === selectedLngCode;
+
+                  return (
+                    <TouchableComponent
+                      key={lang.lngCode}
+                      disabled={selected}
+                      onPress={() => setLng(lang.lngCode)}
+                      background={
+                        Platform.Version >= 21
+                          ? TouchableNativeFeedback.Ripple('grey', true)
+                          : TouchableNativeFeedback.SelectableBackground()
+                      }
+                      useForeground>
+                      {lang.component}
+                    </TouchableComponent>
+                  );
+                })}
+              </View>
+              <ScrollView>
+                <Text style={styles.aboutUsText}>{t('drawer:about')}</Text>
+                <Text style={styles.textColor}>{t('drawer:description')}</Text>
+
+                <Text style={styles.aboutUsText}>
+                  {t('drawer:aboutProject')}
+                </Text>
+                <Text style={styles.textColor}>
+                  {t('drawer:aboutProjectDescription')}
+                </Text>
+              </ScrollView>
               <View style={styles.logos}>
                 <View style={styles.natoContainer}>
                   <TouchableComponent
@@ -114,38 +145,6 @@ const DrawerNavigation = () => {
                   />
                 </TouchableComponent>
               </View>
-              <ScrollView>
-                <Text style={styles.aboutUsText}>{t('drawer:about')}</Text>
-                <Text style={styles.textColor}>{t('drawer:description')}</Text>
-
-                <Text style={styles.aboutUsText}>
-                  {t('drawer:aboutProject')}
-                </Text>
-                <Text style={styles.textColor}>
-                  {t('drawer:aboutProjectDescription')}
-                </Text>
-              </ScrollView>
-
-              <View style={styles.languages}>
-                {LANGS.map((lang) => {
-                  const selected = lang.lngCode === selectedLngCode;
-
-                  return (
-                    <TouchableComponent
-                      key={lang.lngCode}
-                      disabled={selected}
-                      onPress={() => setLng(lang.lngCode)}
-                      background={
-                        Platform.Version >= 21
-                          ? TouchableNativeFeedback.Ripple('grey', true)
-                          : TouchableNativeFeedback.SelectableBackground()
-                      }
-                      useForeground>
-                      {lang.component}
-                    </TouchableComponent>
-                  );
-                })}
-              </View>
             </View>
           );
         }}>
@@ -175,6 +174,7 @@ const styles = StyleSheet.create({
   },
   logos: {
     width: '100%',
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
